@@ -1,31 +1,35 @@
 <script setup>
-// import { useAccountStore } from '@/stores/account';
-// import { logout } from '@/services/accountService';
-// import { useRouter } from 'vue-router';
+import { useAccountStore } from '@/stores/account';
+import { logout } from '@/services/accountService';
+import { useRouter } from 'vue-router';
 
-// const router = useRouter();
-// const account = useAccountStore();
-// //로그아웃
-// const logoutAccount = async () => {
-//   if (!confirm('로그아웃 하시겠습니까?')) {
-//     return;
-//   }
-//   const res = await logout();
-//   if (res === undefined || res.status !== 200) {
-//     return;
-//   }
-//   account.logout();
-//   await router.push('/');
-// };
+const account = useAccountStore();
+//로그아웃
+const logoutAccount = async () => {
+  if (!confirm('ログアウトしますか？')) {
+    return;
+  }
+  const res = await logout();
+  if (res === undefined || res.status !== 200) {
+    return;
+  }
+  account.setLoggedIn(false);
+};
 </script>
 
 <template>
     <div class="top">
-        <span>BOBO</span>
+      <span>BOBO</span>
 
+      <template v-if="account.state.loggedIn">
+        <div @click="logoutAccount">ログアウト</div>
+      </template>
+
+      <template v-else>
         <div class="login">
-           <router-link to="/login">ログイン</router-link>
+          <router-link to="/login">ログイン</router-link>
         </div>
+      </template>
     </div>
 
 </template>

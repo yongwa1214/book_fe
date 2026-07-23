@@ -1,4 +1,31 @@
 <script setup>
+import { reactive } from 'vue';
+import { useRouter } from 'vue-router';
+import { login } from '@/services/accountService';
+
+const router = useRouter();
+
+const state = reactive({
+    form: {
+        loginId: '',
+        loginPw: ''
+    }
+});
+
+const submit = async () => {
+    const res = await login(state.form);
+    console.log('res:', res);
+
+    switch(res.status) {
+        case 200:
+            await router.push('/bobo');
+            break;
+        case 404:
+            alert('ID/パスワードをご確認ください。');
+            break;
+    }
+}
+
 </script>
 
 <template>
@@ -7,14 +34,14 @@
         <router-link to="/bobo">BOBO</router-link>
     </div>
     
-    <form>
+    <form @submit.prevent="submit">
       <div class="mb-4">
-        <label for="email" class="form-label">ID</label>
-        <input type="email" class="form-control" id="email" placeholder="IDを入力してください">
+        <label for="loginId" class="form-label">ID</label>
+        <input type="loginId" class="form-control"  placeholder="IDを入力してください" v-model="state.form.loginId">
       </div>
       <div class="mb-4">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="パスワードを入力してください">
+        <input type="password" class="form-control" id="password" placeholder="パスワードを入力してください" v-model="state.form.loginPw" autocomplete="off">
       </div>
       <div class="button">
         <button type="submit" class="btn btn-primary">ログイン</button>
