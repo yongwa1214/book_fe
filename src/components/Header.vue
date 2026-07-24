@@ -31,7 +31,7 @@ const logoutAccount = async () => {
 
       <template v-if="account.state.loggedIn">
         <div class="menus">
-          <router-link to="/" class="menu-item">MY本棚</router-link>
+          <router-link to="/my/library" class="menu-item">MY本棚</router-link>
           <div class="menu-item" @click="logoutAccount">ログアウト</div>
         </div>
       </template>

@@ -29,9 +29,10 @@ onMounted(async () => {
 
         data.word = params.keyword;
         data.res = res.data;
-        data.totalCount = res.data.totalCount;
+        data.totalCount = res.data.totalItems;
         data.page = res.data.page;
         data.size = res.data.size;
+        console.log(data)
 });
 
 
@@ -79,6 +80,7 @@ const movePage = async (page) => {
                         type="text"
                         v-model="params.keyword"
                         placeholder="本のタイトルを入力してください。"
+                        @keyup.enter="search"
                     />
 
                     <button @click="search" @keyup.enter="search">
