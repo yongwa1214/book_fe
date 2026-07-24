@@ -120,6 +120,7 @@ onMounted(async() => {
     height: 170px;
     background: #ddd;
     overflow: hidden;
+    box-shadow: 0 7px 7px -1px #b2b1b8;
 
     img {
         width: 100%;
