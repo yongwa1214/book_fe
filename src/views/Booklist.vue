@@ -79,7 +79,6 @@ const movePage = async (page) => {
                         type="text"
                         v-model="params.keyword"
                         placeholder="本のタイトルを入力してください。"
-                        @keyup.enter="search"
                     />
 
                     <button @click="search" @keyup.enter="search">

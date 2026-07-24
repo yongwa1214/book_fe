@@ -1,5 +1,6 @@
 <script setup>
 import { useAccountStore } from '@/stores/account';
+import { saveBook } from '@/services/libraryService';
 
 const account = useAccountStore();
 const props = defineProps({
@@ -12,6 +13,38 @@ const props = defineProps({
     }
 
 });
+
+const authorToString = (authors) => {
+    if (!Array.isArray(authors)) {
+        return authors ?? "";
+    }
+
+    return authors.join(", ");
+};
+
+const addMylibrary = async() =>{
+    const data ={
+        bookId : props.results.id,
+        authors: authorToString(props.results.authors),
+        summary: props.results.description,
+        publisher: props.results.publisher,
+        thumbnail: props.results.thumbnail,
+        title: props.results.title,
+        totalPage:props.results.pageCount,
+        
+    } 
+    console.log(data)
+    const res = await saveBook(data);
+    if(res.status !=200){
+        alert("error")
+        return;
+    }
+    alert("My本棚に保存しました")
+
+
+
+}
+// console.log(props.results)
 
 </script>
 
@@ -34,7 +67,7 @@ const props = defineProps({
             <div class="description">{{results.description}}</div>
         </div>
         <div class="button" v-if="account.state.loggedIn">
-            <button class="btn btn-primary">
+            <button @click.stop="addMylibrary" class="btn btn-primary">
                 ＋
             </button>
         </div>
