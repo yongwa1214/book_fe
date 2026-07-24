@@ -1,20 +1,39 @@
 <script setup>
+import { useAccountStore } from '@/stores/account';
+
+const account = useAccountStore();
+const props = defineProps({
+    results: {
+        type: Object,
+    },
+    memo: {
+        type: Object,
+
+    }
+
+});
+
 </script>
 
 <template>
     <div class="box">
         <div class="book-image">
-            <div class="img">
-                <!-- <img :src="book.image" alt="Book Image" /> -->
+            <div class="img" v-if="results.thumbnail">
+                <img :src="results.thumbnail"alt="Book Image"/>
+            </div>
+            <div class="img" v-else>
+                ?
             </div>
         </div>    
         <div class="content">
-            <p class="title">test</p>
-            <span class="author">test</span>
-            <span class="publisher">test</span>
-            <div class="description">test</div>
+            <p class="title">{{results.title}}</p>
+            <span class="author" v-for="author in results.authors" :key="author">
+                {{author}}
+            </span>
+            <span class="publisher"> {{results.publisher}}</span>
+            <div class="description">{{results.description}}</div>
         </div>
-        <div class="button">
+        <div class="button" v-if="account.state.loggedIn">
             <button class="btn btn-primary">
                 ＋
             </button>
@@ -35,7 +54,14 @@
     .img{
         width: 130px;
         height: 100%;
-        background-color: #ec8f8f;
+
+        background: #e5e5e5;
+        color: #888;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 48px;
+        font-weight: bold;
         
     }
     
@@ -56,6 +82,11 @@
         margin-top: 20px;
         font-size: 14px;
         color: #666;
+        
+        display: -webkit-box;
+    -webkit-line-clamp: 3; // 3줄까지만 표시
+    -webkit-box-orient: vertical;
+    overflow: hidden;
     }
 
     .button {
@@ -83,5 +114,14 @@
         
         }
     }
+
+}
+
+.img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+
 }
 </style>

@@ -14,14 +14,15 @@ const account = useAccountStore();
 //로그인 여부 확인
 const checkAccount = async () => {
     const res = await check();
-    console.log('check:', res);
 
     if(res === undefined || res.status != 200) {
+
         account.setChecked(false);
         return;
     } 
+
     account.setChecked(true);
-    account.setLoggedIn(res.data > 0);    
+    account.setLoggedIn(res.data > 0);  
 }
 
 onMounted(() => {
@@ -44,7 +45,7 @@ watch(() => route.path, () => {
     <CreateAccount />
   </div>
   <div v-else>
-       <template v-if="account.state.checked">
+       <template v-if="account.state.checked ">
         <Header />
         <router-view />
     </template>

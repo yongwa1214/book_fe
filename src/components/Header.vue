@@ -4,6 +4,9 @@ import { logout } from '@/services/accountService';
 import { useRouter } from 'vue-router';
 
 const account = useAccountStore();
+const router = useRouter();
+
+
 //로그아웃
 const logoutAccount = async () => {
   if (!confirm('ログアウトしますか？')) {
@@ -14,7 +17,10 @@ const logoutAccount = async () => {
     return;
   }
   account.setLoggedIn(false);
+  router.push('/');
 };
+
+
 </script>
 
 <template>
@@ -25,8 +31,8 @@ const logoutAccount = async () => {
 
       <template v-if="account.state.loggedIn">
         <div class="menus">
-          <router-link to="/">MY本棚</router-link>
-          <div @click="logoutAccount">ログアウト</div>
+          <router-link to="/" class="menu-item">MY本棚</router-link>
+          <div class="menu-item" @click="logoutAccount">ログアウト</div>
         </div>
       </template>
 
@@ -54,14 +60,16 @@ const logoutAccount = async () => {
 }
 .menus{
   display: flex;
-  gap: 20px;
-  a {
+  gap: 30px;
+  
+
+}
+
+.menu-item {
     cursor: pointer;
     color: #fff;
     text-decoration: none;
   }
-
-}
 // header {
 //   .menus {
 //     a {

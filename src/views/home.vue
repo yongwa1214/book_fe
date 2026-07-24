@@ -5,21 +5,21 @@ import { useRouter, useRoute } from 'vue-router';
 
 const params = reactive({
     keyword: '',
-    page: 1,
-    type: 'title'
 }); 
 
 const router = useRouter();
-const route = useRoute();
 
 
 const search = async() => {
+  if(!params.keyword){
+    return
+  }
   const res = await bookList(params);
   console.log(res);
   router.push({
-  path: '/book/list',
-  state: {
-    res: res
+  path: '/search',
+  query: {
+    keyword: params.keyword
   }
 });
   
@@ -41,7 +41,7 @@ const search = async() => {
       />
 
       <button @click="search" @keyup.enter="search">
-             <i class="bi bi-search"></i>
+              <i class="bi bi-search"></i>
       </button>
     </div>
   </div>
