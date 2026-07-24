@@ -18,7 +18,7 @@ const submit = async () => {
 
     switch(res.status) {
         case 200:
-            await router.push('/bobo');
+            await router.push('/');
             break;
         case 404:
             alert('ID/パスワードをご確認ください。');
@@ -31,7 +31,7 @@ const submit = async () => {
 <template>
   <div class="login">
     <div class="title">
-        <router-link to="/bobo">BOBO</router-link>
+        <router-link to="/">BOBO</router-link>
     </div>
     
     <form @submit.prevent="submit">

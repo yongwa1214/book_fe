@@ -51,7 +51,7 @@ const submitForm = () => {
 <template>
   <div class="login">
     <div class="title">
-        <router-link to="/bobo">BOBO</router-link>
+        <router-link to="/">BOBO</router-link>
     </div>
     
     <form>

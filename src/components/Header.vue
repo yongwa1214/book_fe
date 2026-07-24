@@ -19,16 +19,19 @@ const logoutAccount = async () => {
 
 <template>
     <div class="top">
-      <span>BOBO</span>
+      <router-link to="/">
+        <span>BOBO</span>
+      </router-link>
 
       <template v-if="account.state.loggedIn">
-        <div @click="logoutAccount">ログアウト</div>
+        <div class="menus">
+          <router-link to="/">MY本棚</router-link>
+          <div @click="logoutAccount">ログアウト</div>
+        </div>
       </template>
 
       <template v-else>
-        <div class="login">
           <router-link to="/login">ログイン</router-link>
-        </div>
       </template>
     </div>
 
@@ -39,7 +42,7 @@ const logoutAccount = async () => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 15px;
+  padding: 5px 40px;
   background-color: #0d6efd;
   color: #fff;
   span {
@@ -48,6 +51,16 @@ const logoutAccount = async () => {
     // margin:0;
     // padding:0;
   }
+}
+.menus{
+  display: flex;
+  gap: 20px;
+  a {
+    cursor: pointer;
+    color: #fff;
+    text-decoration: none;
+  }
+
 }
 // header {
 //   .menus {

@@ -1,15 +1,28 @@
 <script setup>
 import { reactive } from 'vue';
+import { bookList } from '@/services/libraryService';
+import { useRouter, useRoute } from 'vue-router';
 
-const state = reactive({
+const params = reactive({
     keyword: '',
     page: 1,
     type: 'title'
-});
+}); 
 
-const search = () => {
-  console.log(state.keyword);
-  // TODO: 검색 API 호출
+const router = useRouter();
+const route = useRoute();
+
+
+const search = async() => {
+  const res = await bookList(params);
+  console.log(res);
+  router.push({
+  path: '/book/list',
+  state: {
+    res: res
+  }
+});
+  
 };
 
 </script>
@@ -22,12 +35,12 @@ const search = () => {
     <div class="search-box">
       <input
         type="text"
-        v-model="state.keyword"
+        v-model="params.keyword"
         placeholder="本のタイトルを入力してください。"
         @keyup.enter="search"
       />
 
-      <button @click="search" @enter="search">
+      <button @click="search" @keyup.enter="search">
              <i class="bi bi-search"></i>
       </button>
     </div>
