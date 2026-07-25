@@ -16,7 +16,7 @@ export const myBookList= () =>{
 
 // one book detail
 export const myBookItem= libraryId =>{
-    return axios.get(`/my/library/${libraryId}`).catch(e => e.response);
+    return axios.get(`/my/book/${libraryId}`).catch(e => e.response);
 }
 
 // my book update
