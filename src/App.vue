@@ -1,85 +1,65 @@
-<script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+  <script setup>
+import { watch, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import Header from '@/components/Header.vue'
+import Login from '@/views/Login.vue'
+import CreateAccount from '@/views/CreateAccount.vue'
+import { useAccountStore } from '@/stores/account';
+import { check } from '@/services/accountService';
+
+const route = useRoute();
+const router = useRouter();
+const account = useAccountStore();
+
+//로그인 여부 확인
+const checkAccount = async () => {
+    const res = await check();
+
+    if(res === undefined || res.status != 200) {
+
+        account.setChecked(false);
+        return;
+    } 
+
+    account.setChecked(true);
+    account.setLoggedIn(res.data > 0);  
+}
+
+onMounted(() => {
+    checkAccount();
+})
+
+watch(() => route.path, () => {
+    checkAccount();
+});
+
+
+
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div v-if="route.path === '/login'">
+    <Login />
+  </div>
+  <div v-else-if="route.path === '/new-account'">
+    <CreateAccount />
+  </div>
+  <div v-else>
+       <template v-if="account.state.checked ">
+        <Header />
+        <router-view />
+    </template>
+     <template v-else>
+        서버 통신 오류
+     </template>
+  </div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
-
-  <RouterView />
 </template>
 
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
+<style lang="scss" >
+a {
+  text-decoration: none;
+  color: inherit;
 }
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
+.app .container {  max-width: 576px; }
 </style>
