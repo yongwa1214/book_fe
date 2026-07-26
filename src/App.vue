@@ -6,6 +6,8 @@ import Login from '@/views/Login.vue'
 import CreateAccount from '@/views/CreateAccount.vue'
 import { useAccountStore } from '@/stores/account';
 import { check } from '@/services/accountService';
+import Footer from './components/Footer.vue';
+
 
 const route = useRoute();
 const router = useRouter();
@@ -48,6 +50,7 @@ watch(() => route.path, () => {
        <template v-if="account.state.checked ">
         <Header />
         <router-view />
+        <!-- <Footer /> -->
     </template>
      <template v-else>
         서버 통신 오류

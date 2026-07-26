@@ -4,8 +4,8 @@ export const saveBookMemo = args => {
     return axios.post('/save/memo', args).catch(e => e.response);
 }
 
-export const myMemoList = libraryId => {
-    return axios.get(`/${libraryId}/save/memo`).catch(e => e.response);
+export const myMemoList = (libraryId, type) => {
+    return axios.get(`/${libraryId}/memo/list`,{params :{type}}).catch(e => e.response);
 }
 
 export const memoDetail = memoId => {

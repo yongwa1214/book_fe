@@ -1,16 +1,20 @@
 <script setup>
 import { myBookList } from '@/services/libraryService';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 
 const state = reactive({
     list:null
 })
 
+const selected = ref("all");
+
+const changeFilter = (filter) => {
+    selected.value = filter;
+};
 
 onMounted(async() => {
     const res = await myBookList();
     state.list = res.data
-
 
 })
 </script>
@@ -31,25 +35,49 @@ onMounted(async() => {
         <!-- Right -->
         <div class="right">
         <div class="right-top">
-            <button>すべて</button>
-            <button>読書中</button>
-            <button>完了</button>
+            <button
+                class="btn"
+                :class="{ active: selected === 'all' }"
+                @click="changeFilter('all')"
+            >
+                すべて
+            </button>
+
+            <button
+                class="btn"
+                :class="{ active: selected === 'reading' }"
+                @click="changeFilter('reading')"
+            >
+                読書中
+            </button>
+
+            <button
+                class="btn"
+                :class="{ active: selected === 'finish' }"
+                @click="changeFilter('finish')"
+            >
+                完了
+            </button>
         </div>
 
         <div class="bookshelf">
+            
             <div
                 class="book"
                 v-for="book in state.list"
                 :key="book.libraryId"
             >
-                <div class="thumbnail">
-                    <img :src="book.thumbnail" />
-                </div>
+                <router-link :to="`/my/library/${book.libraryId}`">
+                    <div class="thumbnail">
+                        <img :src="book.thumbnail" />
+                    </div>
 
-                <div class="title">
-                    {{ book.title }}
-                </div>
+                    <div class="title">
+                        {{ book.title }}
+                    </div>
+                </router-link>
             </div>
+        
         </div>
     </div>
     </div>
@@ -60,7 +88,7 @@ onMounted(async() => {
     display: flex;
     width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 50px auto;
     padding: 0 30px;
     min-height: 100vh;
     gap: 20px;
@@ -88,7 +116,23 @@ onMounted(async() => {
 .right-top {
     display: flex;
     gap: 15px;
-    margin-bottom: 25px;
+
+    padding-left: 35px; // thumbnail 시작 위치에 맞게 조절
+   // margin-bottom: 30px;
+}
+
+.right-top .btn {
+
+    color: #77a2ff;
+    border: 1px solid #a4c4ff;
+
+    transition: 0.2s;
+}
+
+.right-top .btn.active {
+    background: #c7e2fc;
+    color: #0d6efd;
+    border-color: #c7e2fc;
 }
 
 .bookshelf {
@@ -134,11 +178,10 @@ onMounted(async() => {
     width: 120px;
 
     text-align: center;
-    font-size: 14px;
+    font-size: 12px;
 
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    white-space: normal;
+    word-break: break-word;
 }
 
 
@@ -146,4 +189,6 @@ onMounted(async() => {
     color: #0d6efd;
     font-weight: bold;
 }
+
+
 </style>

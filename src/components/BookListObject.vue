@@ -33,7 +33,7 @@ const addMylibrary = async() =>{
         totalPage:props.results.pageCount,
         
     } 
-    console.log(data)
+    // console.log(data)
     const res = await saveBook(data);
     if(res.status !=200){
         alert("error")

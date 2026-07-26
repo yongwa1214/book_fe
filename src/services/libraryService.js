@@ -16,12 +16,16 @@ export const myBookList= () =>{
 
 // one book detail
 export const myBookItem= libraryId =>{
-    return axios.get(`/my/library/${libraryId}`).catch(e => e.response);
+    return axios.get(`/my/book/${libraryId}`).catch(e => e.response);
 }
 
 // my book update
 export const bookUpdate = args => {
     return axios.put('/my/book', args).catch(e => e.response);
+}
+
+export const bookStatus = (libraryId, params) => {
+    return axios.patch(`/my/status/${libraryId}?status=${params}`).catch(e => e.response);
 }
 
 export const removeBook = libraryId => {

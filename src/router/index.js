@@ -9,6 +9,9 @@ const router = createRouter({
   {path: "/new-account", component: () => import("@/views/CreateAccount.vue")},
   {path: "/search", component: () => import("@/views/Booklist.vue")},
   {path: "/my/library", component: () => import("@/views/MyLibrary.vue")},
+
+  {path: "/my/library/:libraryId", component: () => import("@/views/MeBookMemoList.vue")},
+  {path: "/my/library/:libraryId/memo", component: () => import("@/views/MemoPage.vue")},
   ],
 })
 

@@ -12,6 +12,7 @@
     "axios": "^1.18.1",
     "bootstrap-icons": "^1.13.1",
     "pinia": "^4.0.2",
+    "swiper": "^14.0.6",
     "vue": "^3.5.40",
     "vue-router": "^5.2.0"
   },

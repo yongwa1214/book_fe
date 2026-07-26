@@ -1,5 +1,7 @@
 <script setup>
 import { reactive, ref } from 'vue';
+import { login } from '@/services/accountService';
+import { useRouter } from 'vue-router';
 
 const status =
     reactive({
@@ -10,6 +12,8 @@ const status =
     isPasswordValid: null,
     isPassword2Valid: null,
     });
+
+const router = useRouter();
 
 const patterns = {
     email: /^[A-Za-z0-9]{8,}$/,
@@ -33,17 +37,25 @@ const regex = (data) =>{
     }
 };
 
-const submitForm = () => {
-    status.isEmailValid = status.email.length > 0;
-    status.isPasswordValid = regex.test(status.password);
-    status.isPassword2Valid = status.password === status.password2;
-
-    if (status.isEmailValid && status.isPasswordValid && status.isPassword2Valid) {
-        // フォームの送信処理をここに追加
-        console.log('フォームが送信されました');
-    } else {
-        console.log('フォームの入力が無効です');
+const submitForm = async() => {
+    const dto ={
+        name: status.email,
+        loginId : status.email,
+        loginPw : status.password
     }
+    const res = await join(dto)
+    // router.push('/');
+
+    // status.isEmailValid = status.email.length > 0;
+    // status.isPasswordValid = regex.test(status.password);
+    // status.isPassword2Valid = status.password === status.password2;
+
+    // if (status.isEmailValid && status.isPasswordValid && status.isPassword2Valid) {
+    //     // フォームの送信処理をここに追加
+    //     console.log('フォームが送信されました');
+    // } else {
+    //     console.log('フォームの入力が無効です');
+    // }
 };
 
 </script>
@@ -55,15 +67,15 @@ const submitForm = () => {
     </div>
     
     <form>
-        <label for="email" class="form-label">ID</label>
+        <label for="id" class="form-label">ID</label>
         <div class="mb-3 id">
-            <input type="email" class="form-control" id="email" placeholder="IDを入力してください" v-model="status.email" @input="regex('email')">
+            <input type="id" class="form-control" id="id" placeholder="IDを入力してください" v-model="status.email" >
             <button type="submit" class="btn btn-primary">重複確認</button>
       </div>
       <div class="mb-4">
         <label for="password" class="form-label">Password</label>
-        <input type="password" class="form-control mb-3" id="password" placeholder="パスワードを入力してください" v-model="status.password" @input="regex('password')">
-        <input type="password" class="form-control" id="password２" placeholder="パスワード確認" v-model="status.password2" @input="regex('password2')">
+        <input type="password" class="form-control mb-3" id="password" placeholder="パスワードを入力してください" v-model="status.password">
+        <input type="password" class="form-control" id="password２" placeholder="パスワード確認" v-model="status.password2">
       </div>
       <div class="button">
         <button type="submit" class="btn btn-primary" 
