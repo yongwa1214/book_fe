@@ -32,6 +32,7 @@ const props = defineProps({
 
 <style lang="scss" scoped>
 .box {
+    box-sizing: border-box;
     gap: 20px;
     display: flex;
     height: 160px;

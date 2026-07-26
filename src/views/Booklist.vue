@@ -17,15 +17,16 @@ const params = reactive({
 
 const data = reactive({
     word :''
-    , totalCount: null
+    , totalCount: 0
     ,res: [],
     page: null,
-    size: null
+    size: 0
 });
 onMounted(async () => {
     params.keyword = route.query.keyword;
 
         const res = await bookList(params);
+        console.log(res.data)
 
         data.word = params.keyword;
         data.res = res.data;

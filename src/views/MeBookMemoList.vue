@@ -5,7 +5,7 @@ import { useRoute, useRouter } from 'vue-router';
 import CharactorsObject from '@/components/CharactorsObject.vue';
 import MemoListObject from '@/components/MemoListObject.vue';
 import { myMemoList } from '@/services/memoService';
-
+import MemoPage from './MemoPage.vue';
 
 
 const info = reactive({
@@ -27,6 +27,17 @@ const info = reactive({
     ,charactor:[]
 })
 
+const state = reactive({
+    showMemoInput : false
+})
+
+const changeShow = () =>{
+    if(!state.showMemoInput){
+        state.showMemoInput = true
+        return;
+    }
+    state.showMemoInput = false
+}
 
 const selected = info.res.status;
 
@@ -118,7 +129,7 @@ const changeFilter = (filter) => {
                 <div class="char">
                     <CharactorsObject v-for="char in info.char"
                             :key="char.memoId"
-                            :results="char"/>
+                            :results="char"/>   
                 </div>
             </div>
 
@@ -130,9 +141,9 @@ const changeFilter = (filter) => {
                         <div class="right-title">読書記録</div>
 
                         <div class="r-btn">
-                            <button @click.stop="addMylibrary" class="btn btn-primary">
-                                ＋
-                            </button>
+                                <button @click.stop="changeShow" class="btn btn-primary">
+                                    ＋
+                                </button>
                         </div>
                     </div>
                 
@@ -154,9 +165,14 @@ const changeFilter = (filter) => {
 
                 <div class="memoArea">
                 <!-- memo area -->
+                <template v-if="!state.showMemoInput">
                     <MemoListObject  v-for="memo in info.memo"
                         :key="memo.memoId"
                         :results="memo"/>
+                </template>
+                <template v-else>
+                    <MemoPage/>
+                </template>
                 </div>
                 
 
@@ -256,7 +272,7 @@ const changeFilter = (filter) => {
 .right-title{
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     font-weight: bold;
     font-size: 25px;
 }
@@ -293,13 +309,13 @@ const changeFilter = (filter) => {
         margin: 20px 0;
     }
     
-    .right{
-        height: 700px;
-    }
+    // .right{
+    //     height: 700px;
+    // }
     .right-bottom{
        padding-right: 10px;
         width: 100%;
-         height: 500px;
+        // height: 500px;
 
     }
 
@@ -352,8 +368,10 @@ const changeFilter = (filter) => {
 
 
 .memoArea{
+    max-height: 700px;
     margin-top: 5px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    margin-bottom: 100px;
 }
 
 .char{
