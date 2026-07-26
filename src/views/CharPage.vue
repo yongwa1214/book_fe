@@ -1,29 +1,61 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { saveBookMemo } from '@/services/memoService';
+import { saveBookMemo, updateMemo } from '@/services/memoService';
 
 const router = useRouter();
 const route = useRoute();
+const props = defineProps({
+    results: {
+        type: Object,
+    },
+    memo: {
+        type: Object,
+
+    }
+});
+
 
 const state = reactive({
     memo:{
         title:"",
         content :"",
         type: "character",
-        id : 0,
+        memoId : 0,
         libraryId: route.params.libraryId
     }
 })
 
+onMounted(() => {
+    if (props.results) {
+        state.memo.title= props.results.title
+        state.memo.content= props.results.content
+        state.memo.memoId= props.results.memoId
+    }
+})
+
+const refresh = ()=>{
+    state.memo.title= ""
+    state.memo.content= ""
+    state.memo.memoId=0
+    props.results.type = null
+}
 
 const emit = defineEmits(['return'])
 const save = async() =>{
+    console.log(state.memo)
+    if(state.memo.memoId>0){
+        const res = await updateMemo(state.memo);
+         refresh();
+        emit('return',2)
+        return
+    }
     const res = await saveBookMemo(state.memo);
-    console.log("save", res)
+    refresh();
     emit('return',2)
 }
 const cancel = () =>{
+    refresh();
     emit('return',2)
 } 
 
@@ -47,7 +79,7 @@ const cancel = () =>{
     </div> -->
     <div class="d-flex button">
       <button type="button" class="btn btn-light" @click="cancel">キャンセル</button>
-      <button type="button" class="btn btn-primary" @click="save">{{ state.memo.id > 0 ? '修正':' 保存　' }}</button>
+      <button type="button" class="btn btn-primary" @click="save">{{ state.memo.memoId > 0 ? '修正':' 保存　' }}</button>
     </div>
   </form>
 </template>

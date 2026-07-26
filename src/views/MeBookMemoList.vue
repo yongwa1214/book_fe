@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, onMounted, isVNode } from 'vue';
-import { myBookItem } from '@/services/libraryService';
+import { myBookItem, bookStatus } from '@/services/libraryService';
 import { useRoute, useRouter } from 'vue-router';
 import CharactorsObject from '@/components/CharactorsObject.vue';
 import MemoListObject from '@/components/MemoListObject.vue';
@@ -29,6 +29,11 @@ const info = reactive({
 
     ,memo :[]
     ,charactor:[]
+
+    ,modifyData :{
+        title :''
+        ,content:''
+    }
 })
 
 const state = reactive({
@@ -51,8 +56,10 @@ const loadChar = async () =>{
 
 
 const changeShow = async(args) =>{
-  
+    console.log("why")
+    console.log("args", args)
     if(args == 1){
+        console.log("hey")
         await loadMemo();
         state.showMemoInput = false;
         return;
@@ -83,10 +90,35 @@ onMounted(async() => {
 
 })
 
-const changeFilter = (filter) => {
+const changeFilter = async(filter) => {
     info.res.status = filter;
+
+    await bookStatus(route.params.libraryId,filter)
 };
 
+const modifyMemo =(args) =>{
+    info.modifyData = args
+    state.showMemoInput=true
+
+}
+
+const modifyChar =(args) =>{
+    info.modifyData = args
+    state.showCharInput=true
+
+}
+
+const reform = ( args) =>{
+    info.modifyData.title = ''
+    info.modifyData.content =''
+    info.modifyData.memoId=''
+    if(args ==1 ){
+        state.showMemoInput = true 
+        return;
+    }
+    state.showCharInput = true
+    
+}
 </script>
 
 <template>
@@ -119,7 +151,7 @@ const changeFilter = (filter) => {
                         :class="{ active: info.res.status === 'finish'}"
                         @click="changeFilter('finish')"
                     >
-                        完了
+                        完読
                     </button>
                 </div>
                 <div class="info">
@@ -145,7 +177,7 @@ const changeFilter = (filter) => {
                 <div class="right-title">
                     登場人物
                     <div class="r-btn">
-                        <button @click.stop="state.showCharInput = true" class="btn btn-primary">
+                        <button @click.stop="reform" class="btn btn-primary">
                             ＋
                         </button>
                     </div>
@@ -155,12 +187,14 @@ const changeFilter = (filter) => {
                     <CharactorsObject v-for="char in info.char"
                             :key="char.memoId"
                             :results="char"
-                            @return="changeShow"/>   
+                            @return="changeShow"
+                            @fix="modifyChar(char)"/>   
                     </div>
 
                 </template>
                     <template v-else>
-                        <CharPage @return="changeShow"/>
+                        <CharPage @return="changeShow"
+                            :results="info.modifyData"/>
                     </template>
                 
             </div>
@@ -173,7 +207,7 @@ const changeFilter = (filter) => {
                         <div class="right-title">読書記録</div>
 
                         <div class="r-btn">
-                                <button @click.stop="state.showMemoInput = true" class="btn btn-primary">
+                                <button @click.stop="reform(1)" class="btn btn-primary">
                                     ＋
                                 </button>
                         </div>
@@ -202,10 +236,12 @@ const changeFilter = (filter) => {
                     <MemoListObject  v-for="memo in info.memo"
                         :key="memo.memoId"
                         :results="memo"
-                        @return="changeShow"/>
+                        @return="changeShow"
+                        @fix="modifyMemo(memo)"/>
                 </template>
                 <template v-else>
-                    <MemoPage @return="changeShow"/>
+                    <MemoPage @return="changeShow"
+                            :results="info.modifyData"/>
                 </template>
                 </div>
                 
@@ -347,7 +383,7 @@ const changeFilter = (filter) => {
     //     height: 700px;
     // }
     .right-bottom{
-       padding-right: 10px;
+       //padding-right: 10px;
         width: 100%;
         // height: 500px;
 

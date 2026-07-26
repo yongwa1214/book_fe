@@ -1,36 +1,74 @@
 <script setup>
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { saveBookMemo } from '@/services/memoService';
+import { saveBookMemo, updateMemo } from '@/services/memoService';
+
 
 const router = useRouter();
 const route = useRoute();
+
+const props = defineProps({
+    results: {
+        type: Object,
+    },
+    memo: {
+        type: Object,
+
+    }
+});
 
 const state = reactive({
     memo:{
         title:"",
         content :"",
         type: "memo",
-        id : 0,
+        memoId : 0,
         libraryId: route.params.libraryId
     }
 })
 
+console.log("yahoo",state.memo)
+onMounted(() => {
+    if (props.results) {
+        state.memo.title= props.results.title
+        state.memo.content= props.results.content
+        state.memo.memoId= props.results.memoId
+    }
+
+})
+
+const refresh = ()=>{
+    state.memo.title= ""
+    state.memo.content= ""
+    state.memo.memoId=0
+    props.results.type = null
+}
 
 const emit = defineEmits(['return'])
 const save = async() =>{
-    const res = await saveBookMemo(state.memo);
-    console.log("save", res)
+    if(state.memo.memoId>0){
+        const res = await updateMemo(state.memo);
+        refresh();
+        emit('return',1)
+        return
+    }
+    const res = await saveBookMemo(state.memo)
+    refresh();
+
     emit('return',1)
 }
+
 const cancel = () =>{
+    refresh();
+    console.log("rhclsek", state.memo)
     emit('return',1)
 } 
 
+console.log("we", state.memo)
 
 </script>
 <template>
- <form class="detail" @submit.prevent="submit">
+ <form class="detail">
     <!-- <div class="mb-3 date" >
       등록일시: test
     </div> -->
@@ -47,7 +85,7 @@ const cancel = () =>{
     </div> -->
     <div class="d-flex button">
       <button type="button" class="btn btn-light" @click="cancel">キャンセル</button>
-      <button type="button" class="btn btn-primary" @click="save">{{ state.memo.id > 0 ? '修正':' 保存　' }}</button>
+      <button type="button" class="btn btn-primary" @click="save">{{ state.memo.memoId > 0 ? '修正':' 保存　' }}</button>
     </div>
   </form>
 </template>
@@ -60,6 +98,10 @@ const cancel = () =>{
 .date{
   color: #6b6b6b;
   font-size: 12px;
+}
+
+.detail{
+    width: 810px;
 }
 
 textarea.form-control{

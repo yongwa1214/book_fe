@@ -24,6 +24,10 @@ export const bookUpdate = args => {
     return axios.put('/my/book', args).catch(e => e.response);
 }
 
+export const bookStatus = (libraryId, params) => {
+    return axios.patch(`/my/status/${libraryId}?status=${params}`).catch(e => e.response);
+}
+
 export const removeBook = libraryId => {
     return axios.delete(`/remove/${libraryId}`).catch(e => e.response);
 }

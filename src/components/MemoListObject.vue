@@ -12,13 +12,17 @@ const props = defineProps({
     }
 
 });
-const emit = defineEmits(['return'])
+
+const emit = defineEmits(['return', 'fix'])
 const deMemo = async ()=>{
-    console.log(props.results.memoId)
     if(confirm("削除しますか")){
         await deleteMemo(props.results.memoId)
-        emit('return',0)
+        emit('return',1)
     }
+}
+
+const modify = () =>{
+    emit('fix')
 }
 
 </script>
@@ -35,7 +39,7 @@ const deMemo = async ()=>{
             </div>
         </div>
         <div class="memoBtn">
-            <i class="bi bi-pencil"></i>
+            <i class="bi bi-pencil" @click="modify"></i>
             <i class="bi bi-trash" @click="deMemo"></i>
         </div>
     </div>
@@ -77,6 +81,7 @@ const deMemo = async ()=>{
         margin-left: 10px;
         display: flex;
         gap: 20px;
+        padding: 0 5px;
     }
 
     .description {
