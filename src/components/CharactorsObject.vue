@@ -1,19 +1,35 @@
 <script setup>
+import { deleteMemo } from '@/services/memoService';
 const props = defineProps({
     results: {
         type: Object,
     },
     memo: {
         type: Object,
-
     }
 
 });
+
+const emit = defineEmits(['return'])
+const deMemo = async ()=>{
+    console.log(props.results.memoId)
+    if(confirm("削除しますか")){
+        await deleteMemo(props.results.memoId)
+        emit('return',2)
+    }
+}
+
 </script>
 
 <template>
     <div class="chBox">
-        <div class="title">{{ results.title }}</div>
+        <div class="chTop">
+            <div class="title">{{ results.title }}</div>
+            <div class="memoBtn">
+                <i class="bi bi-pencil"></i>
+                <i class="bi bi-trash" @click="deMemo"></i>
+            </div>
+        </div>
         <div class="content">{{ results.content }}</div>
     </div>
 </template>
@@ -23,11 +39,27 @@ const props = defineProps({
 .chBox{
     margin: 10px 0;
     padding: 10px;
-    width: 150px;
+    min-width: 150px;
     border-radius: 5%;
     border: 1px solid #efefef;
     height: 180px;
 
+}
+
+.chTop{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.memoBtn{
+
+        margin-left: 10px;
+        display: flex;
+        gap: 10px;
+    }
+i{
+    cursor: pointer;
 }
 .title{
     margin-bottom: 5px;

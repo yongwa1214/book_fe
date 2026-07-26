@@ -6,6 +6,10 @@ import CharactorsObject from '@/components/CharactorsObject.vue';
 import MemoListObject from '@/components/MemoListObject.vue';
 import { myMemoList } from '@/services/memoService';
 import MemoPage from './MemoPage.vue';
+import CharPage from './CharPage.vue';
+
+const route = useRoute();
+const router = useRouter();
 
 
 const info = reactive({
@@ -28,21 +32,43 @@ const info = reactive({
 })
 
 const state = reactive({
-    showMemoInput : false
+    showMemoInput : false,
+    showCharInput: false
 })
 
-const changeShow = () =>{
-    if(!state.showMemoInput){
-        state.showMemoInput = true
-        return;
-    }
-    state.showMemoInput = false
+const libraryId = route.params.libraryId
+
+const loadMemo = async () => {
+    const memo = await myMemoList(libraryId, "memo")
+    info.memo = memo.data
 }
+
+const loadChar = async () =>{
+    console.log("hello")
+    const char = await myMemoList(libraryId, "character")
+    info.char = char.data
+} 
+
+
+const changeShow = async(args) =>{
+  
+    if(args == 1){
+        await loadMemo();
+        state.showMemoInput = false;
+        return;
+    }else if(args == 2){
+        console.log("hey")
+        await loadChar();
+        state.showCharInput = false;
+    }
+    
+
+}
+
+
 
 const selected = info.res.status;
 
-const route = useRoute();
-const router = useRouter();
 
 onMounted(async() => {
     const libraryId =route.params.libraryId
@@ -50,11 +76,9 @@ onMounted(async() => {
     info.res = res.data
     info.status = res.data.status
 
-    const memo = await myMemoList(libraryId, "memo")
-    info.memo = memo.data
+     await loadMemo();
 
-    const char = await myMemoList(libraryId, "character")
-    info.char = char.data
+     await loadChar();
    
 
 })
@@ -121,16 +145,24 @@ const changeFilter = (filter) => {
                 <div class="right-title">
                     登場人物
                     <div class="r-btn">
-                        <button @click.stop="addMylibrary" class="btn btn-primary">
+                        <button @click.stop="state.showCharInput = true" class="btn btn-primary">
                             ＋
                         </button>
                     </div>
                 </div>
-                <div class="char">
+                <template v-if="!state.showCharInput">
+                    <div class="char">
                     <CharactorsObject v-for="char in info.char"
                             :key="char.memoId"
-                            :results="char"/>   
-                </div>
+                            :results="char"
+                            @return="changeShow"/>   
+                    </div>
+
+                </template>
+                    <template v-else>
+                        <CharPage @return="changeShow"/>
+                    </template>
+                
             </div>
 
             <div class="middle-line"></div>
@@ -141,26 +173,27 @@ const changeFilter = (filter) => {
                         <div class="right-title">読書記録</div>
 
                         <div class="r-btn">
-                                <button @click.stop="changeShow" class="btn btn-primary">
+                                <button @click.stop="state.showMemoInput = true" class="btn btn-primary">
                                     ＋
                                 </button>
                         </div>
                     </div>
-                
-                    <div class="search-area">
-                        <div class="search-box">
-                            <input
-                                type="text"
-                                
-                                placeholder="本のタイトルを入力してください。"
-                                @keyup.enter="search"
-                            />
 
-                            <button @click="search" @keyup.enter="search">
-                                    <i class="bi bi-search"></i>
-                            </button>
-                        </div>
+                    <div class="search-area">
+                    <div class="search-box">
+                        <input
+                            type="text"
+                            
+                            placeholder="本のタイトルを入力してください。"
+                            @keyup.enter="search"
+                        />
+
+                        <button @click="search" @keyup.enter="search">
+                                <i class="bi bi-search"></i>
+                        </button>
                     </div>
+                    </div>
+
                 </div>
 
                 <div class="memoArea">
@@ -168,10 +201,11 @@ const changeFilter = (filter) => {
                 <template v-if="!state.showMemoInput">
                     <MemoListObject  v-for="memo in info.memo"
                         :key="memo.memoId"
-                        :results="memo"/>
+                        :results="memo"
+                        @return="changeShow"/>
                 </template>
                 <template v-else>
-                    <MemoPage/>
+                    <MemoPage @return="changeShow"/>
                 </template>
                 </div>
                 
@@ -376,8 +410,9 @@ const changeFilter = (filter) => {
 
 .char{
     display: flex;
-    gap: 20px
-
+    gap: 20px;
+    width : 820px;
+    overflow-x: auto;
 }
 
 </style>

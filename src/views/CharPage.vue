@@ -10,7 +10,7 @@ const state = reactive({
     memo:{
         title:"",
         content :"",
-        type: "memo",
+        type: "character",
         id : 0,
         libraryId: route.params.libraryId
     }
@@ -21,10 +21,10 @@ const emit = defineEmits(['return'])
 const save = async() =>{
     const res = await saveBookMemo(state.memo);
     console.log("save", res)
-    emit('return',1)
+    emit('return',2)
 }
 const cancel = () =>{
-    emit('return',1)
+    emit('return',2)
 } 
 
 
@@ -34,8 +34,8 @@ const cancel = () =>{
     <!-- <div class="mb-3 date" >
       등록일시: test
     </div> -->
-    <div class="mb-3 mt-3">
-      <label for="title" class="form-label">タイトル</label>
+    <div class="mb-3 mt-1">
+      <label for="title" class="form-label">名前</label>
       <input type="text" id="title" class="form-control p-2" ref="ref_title" v-model="state.memo.title" />
     </div>
     <div class="mb-2">
@@ -62,9 +62,13 @@ const cancel = () =>{
   font-size: 12px;
 }
 
+.detail{
+  width: 820px;
+}
+
 textarea.form-control{
     width: 100%;
-    min-height: 300px;
+    min-height: 100px;
 }
 
 
@@ -87,11 +91,9 @@ input:focus {
     justify-content: flex-end;
 }
 
-.btn .btn-primary{
 
-}
 .contentBox{
- min-height: 500px;
+ min-height: 100px;
 }
 
 </style>

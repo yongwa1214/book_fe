@@ -1,6 +1,6 @@
 <script setup>
 import { useAccountStore } from '@/stores/account';
-import { saveBook } from '@/services/libraryService';
+import { deleteMemo } from '@/services/memoService';
 
 const props = defineProps({
     results: {
@@ -12,28 +12,42 @@ const props = defineProps({
     }
 
 });
-
+const emit = defineEmits(['return'])
+const deMemo = async ()=>{
+    console.log(props.results.memoId)
+    if(confirm("削除しますか")){
+        await deleteMemo(props.results.memoId)
+        emit('return',0)
+    }
+}
 
 </script>
 
 <template>
     <div class="box">
-        <div class="content">
-            <p class="title">{{results.title}}</p>
-            <span class="author">
-                {{results.createdAt}}
-            </span>
-            <div class="description">{{results.content}}</div>
+        <div class="memoRight">
+            <div class="content">
+                <p class="title">{{results.title}}</p>
+                <span class="author">
+                    {{results.createdAt}}
+                </span>
+                <div class="description">{{results.content}}</div>
+            </div>
         </div>
-        
+        <div class="memoBtn">
+            <i class="bi bi-pencil"></i>
+            <i class="bi bi-trash" @click="deMemo"></i>
+        </div>
     </div>
     
 </template>
 
 <style lang="scss" scoped>
 .box {
+    display: flex;
     box-sizing: border-box;
-    gap: 20px;
+    justify-content: space-between;
+    //gap: 20px;
     display: flex;
     height: 160px;
     padding: 5px 0;
@@ -54,8 +68,19 @@ const props = defineProps({
        }
     }
 
+    .memoRight{
+        flex: 1;
+    }
+
+    .memoBtn{
+        font-size: 20px;
+        margin-left: 10px;
+        display: flex;
+        gap: 20px;
+    }
+
     .description {
-        margin-top: 20px;
+        margin-top: 15px;
         font-size: 14px;
         color: #666;
         
@@ -66,6 +91,10 @@ const props = defineProps({
     }
 
 
+}
+
+i{
+    cursor: pointer;
 }
 
 </style>
