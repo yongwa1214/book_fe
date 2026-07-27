@@ -3,7 +3,9 @@ import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import { login } from '@/services/accountService';
 
+
 const router = useRouter();
+
 
 const state = reactive({
     form: {
@@ -14,11 +16,13 @@ const state = reactive({
 
 const submit = async () => {
     const res = await login(state.form);
-    console.log('res:', res);
+    //console.log('res:', res);
+
 
     switch(res.status) {
         case 200:
             await router.push('/');
+            localStorage.setItem("username",res.data.name)
             break;
         case 404:
             alert('ID/パスワードをご確認ください。');

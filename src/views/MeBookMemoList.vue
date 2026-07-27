@@ -1,6 +1,6 @@
 <script setup>
-import { reactive, onMounted, isVNode } from 'vue';
-import { myBookItem, bookStatus } from '@/services/libraryService';
+import { reactive, onMounted,  } from 'vue';
+import { myBookItem, bookStatus, lastBookUpdate } from '@/services/libraryService';
 import { useRoute, useRouter } from 'vue-router';
 import CharactorsObject from '@/components/CharactorsObject.vue';
 import MemoListObject from '@/components/MemoListObject.vue';
@@ -74,11 +74,12 @@ const changeShow = async(args) =>{
 
 
 
-const selected = info.res.status;
-
-
 onMounted(async() => {
+    
     const libraryId =route.params.libraryId
+    await lastBookUpdate(libraryId);
+
+
     const res = await myBookItem(libraryId);
     info.res = res.data
     info.status = res.data.status
@@ -86,6 +87,7 @@ onMounted(async() => {
      await loadMemo();
 
      await loadChar();
+
    
 
 })
@@ -125,17 +127,17 @@ const reform = ( args) =>{
     <div class="container">
         <div class="left">
             <div class="left-top">
-                <img :src="info.res.thumbnail" class="book-img">
+                    <img :src="info.res.thumbnail" class="book-img">
 
                 <div class="title">
                     {{info.res.title}}
                 </div>
             </div>
 
-            <div class="readCount">
+            <!-- <div class="readCount">
                 {{ info.res.totalPage }} / {{ info.res.readPage }}
 
-            </div>
+            </div> -->
             <div class="left-buttom">
                 <div class="button">
                     <button
@@ -273,6 +275,7 @@ const reform = ( args) =>{
 .left-top {
     text-align: center;   // 가운데 정렬
     padding-top: 20px;    // 위 여백
+    
 }
 
 .button {
@@ -302,6 +305,7 @@ const reform = ( args) =>{
     height: 220px;
     margin: 0 auto;       // 이미지 가운데
     object-fit: cover;
+    box-shadow: 0 7px 7px -1px #b2b1b8;
 }
 
 .title {
@@ -450,5 +454,7 @@ const reform = ( args) =>{
     width : 820px;
     overflow-x: auto;
 }
+
+
 
 </style>

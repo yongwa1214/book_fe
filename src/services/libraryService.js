@@ -14,10 +14,24 @@ export const myBookList= () =>{
     return axios.get('/my/library').catch(e => e.response);
 }
 
+export const myBookListType= (type) =>{
+    return axios.get(`/my/library/filter?type=${type}`).catch(e => e.response);
+}
+
+
 // one book detail
 export const myBookItem= libraryId =>{
     return axios.get(`/my/book/${libraryId}`).catch(e => e.response);
 }
+
+export const LastBookRead= ()=>{
+    return axios.get('/last/my/book').catch(e => e.response);
+}
+
+export const MonthFinishBook= ()=>{
+    return axios.get('month/my/booklist').catch(e => e.response);
+}
+
 
 // my book update
 export const bookUpdate = args => {
@@ -26,6 +40,10 @@ export const bookUpdate = args => {
 
 export const bookStatus = (libraryId, params) => {
     return axios.patch(`/my/status/${libraryId}?status=${params}`).catch(e => e.response);
+}
+
+export const lastBookUpdate = (libraryId) => {
+    return axios.patch(`/book/status/${libraryId}`).catch(e => e.response);
 }
 
 export const removeBook = libraryId => {

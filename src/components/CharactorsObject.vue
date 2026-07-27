@@ -43,6 +43,7 @@ const modify = () =>{
 .chBox{
     margin: 10px 0;
     padding: 10px;
+    min-width: 150px;
     max-width: 150px;
     border-radius: 5%;
     border: 1px solid #efefef;

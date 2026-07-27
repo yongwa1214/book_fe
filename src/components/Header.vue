@@ -16,6 +16,7 @@ const logoutAccount = async () => {
   if (res === undefined || res.status !== 200) {
     return;
   }
+  localStorage.clear();
   account.setLoggedIn(false);
   router.push('/');
 };

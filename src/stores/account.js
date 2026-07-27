@@ -7,7 +7,7 @@ export const useAccountStore = defineStore("account", () => {
         checked: false,
         loggedIn: false
     });
-    console.log('dare')
+    //console.log('dare')
 
     const setChecked = val => state.checked = val;
 
@@ -15,3 +15,5 @@ export const useAccountStore = defineStore("account", () => {
 
     return { state, setChecked, setLoggedIn };
 });
+
+
