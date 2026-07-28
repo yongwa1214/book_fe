@@ -1,6 +1,6 @@
 <script setup>
 import { reactive, ref } from 'vue';
-import { login } from '@/services/accountService';
+import { check, sameId, join } from '@/services/accountService';
 import { useRouter } from 'vue-router';
 
 const status =
@@ -11,7 +11,10 @@ const status =
     isEmailValid: null,
     isPasswordValid: null,
     isPassword2Valid: null,
-    });
+    check : false
+    },
+
+);
 
 const router = useRouter();
 
@@ -37,25 +40,36 @@ const regex = (data) =>{
     }
 };
 
+const checkId = async() =>{
+    const res = await sameId(status.email)
+    console.log(res)
+    if(res.data < 1){
+        status.check = true
+        return;
+    }
+    alert("重複IDです。")
+    status.check = false
+}
+
+
 const submitForm = async() => {
+    if(!status.check){
+        alert("重複確認をしてください")
+        return
+    }
+    
     const dto ={
         name: status.email,
         loginId : status.email,
         loginPw : status.password
     }
     const res = await join(dto)
-    // router.push('/');
+    if(res.status =200){
+        alert("会員登録ありがとうございます。")
+        router.push('/')
+    }
 
-    // status.isEmailValid = status.email.length > 0;
-    // status.isPasswordValid = regex.test(status.password);
-    // status.isPassword2Valid = status.password === status.password2;
-
-    // if (status.isEmailValid && status.isPasswordValid && status.isPassword2Valid) {
-    //     // フォームの送信処理をここに追加
-    //     console.log('フォームが送信されました');
-    // } else {
-    //     console.log('フォームの入力が無効です');
-    // }
+ 
 };
 
 </script>
@@ -66,20 +80,24 @@ const submitForm = async() => {
         <router-link to="/">BOBO</router-link>
     </div>
     
-    <form>
+    <form @submit.prevent="submitForm">
         <label for="id" class="form-label">ID</label>
-        <div class="mb-3 id">
+        <div class="mb- id">
             <input type="id" class="form-control" id="id" placeholder="IDを入力してください" v-model="status.email" >
-            <button type="submit" class="btn btn-primary">重複確認</button>
+            <button type="button" class="btn btn-primary" @click.stop="checkId">重複確認</button>
+            
       </div>
-      <div class="mb-4">
+      <span v-if="status.check" class="mb-3">
+                IDを使えます。
+            </span>
+      <div class="mb-4 mt-3">
         <label for="password" class="form-label">Password</label>
         <input type="password" class="form-control mb-3" id="password" placeholder="パスワードを入力してください" v-model="status.password">
         <input type="password" class="form-control" id="password２" placeholder="パスワード確認" v-model="status.password2">
       </div>
       <div class="button">
-        <button type="submit" class="btn btn-primary" 
-                @click="submitForm" @keyup.enter="submitForm">
+        <button type="button" class="btn btn-primary" 
+                @click.stop="submitForm" @keyup.enter.stop="submitForm">
                 登録</button>
       </div>
     </form>
@@ -128,7 +146,12 @@ form {
         width: 150px;
         height: 38px;
     }
+    
 }
+
+span{
+        color: rgb(47, 224, 130);
+    }
 .button {
     display: flex;
     flex-direction: column;

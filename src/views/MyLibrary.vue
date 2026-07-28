@@ -121,7 +121,7 @@ onMounted(async() => {
                 :class="{ active: selected === 'finish' }"
                 @click="getLibraryList('finish')"
             >
-                完了
+                完読
             </button>
         </div>
 

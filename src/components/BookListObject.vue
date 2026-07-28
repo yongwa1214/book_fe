@@ -36,7 +36,7 @@ const addMylibrary = async() =>{
     // console.log(data)
     const res = await saveBook(data);
     if(res.status !=200){
-        alert("error")
+        alert("My本棚にある図書です。")
         return;
     }
     alert("My本棚に保存しました")

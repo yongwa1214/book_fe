@@ -156,7 +156,7 @@ const reform = ( args) =>{
                         完読
                     </button>
                 </div>
-                <div class="info">
+                <!-- <div class="info">
                     <div class="info-book">
                         <span class="info-title">著者</span>
                         <span class="info-title">{{ info.res.authors }}</span>
@@ -167,7 +167,7 @@ const reform = ( args) =>{
                     </div>
                     <p>{{ info.res.authors }}</p>
                     <p>{{ info.res.authors }}</p>
-                </div>
+                </div> -->
                 
             </div>
         </div>

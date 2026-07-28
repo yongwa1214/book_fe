@@ -5,6 +5,10 @@ export const join = args => {
     return axios.post('account/join', args).catch(e => e.response);
 }
 
+export const sameId = id => {
+    return axios.get(`account/id/check?id=${id}`).catch(e => e.response);
+}
+
 export const login = args => {
     return axios.post('/account/login', args).catch(e => e.response);
 }
